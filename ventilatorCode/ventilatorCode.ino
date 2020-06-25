@@ -1,7 +1,7 @@
 #include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
 
-LiquidCrystal_I2C lcd(0x20,20,4); //set up LCD
+LiquidCrystal_I2C lcd(0x20,20,4); //set up LCD, change the 0x20 to your I2C address if needed
 
 //pins
 const int dirPin = 4; //ctrls direction of motor
@@ -21,14 +21,13 @@ const float maxDelay = 2500; //min and max delays between pushes (ms)
 const float minDelay = 300;
 
 int mode = 0; //mode, 0 is manual, 1 is timed, 2 is dynamic airflow
-bool inPush = false; //is it piushing?
+bool inPush = false; //is it pushing? (prevents premature second activation)
 int airTime; //how long to push?
 int delayBetweenBreaths; //delay between breaths (for timed)
 int air; //airflow
-bool calibrated = false;
-int loops = 0;
+bool calibrated = false; //has the pressure sensor been calibrated?
+int loops = 0; //gives 1 loop before timed mode starts so you can switch into a different mode
 
-//String modeList = ["MAN", "TIM", "DYN"];
 
 void setup() {
 
@@ -38,8 +37,6 @@ void setup() {
   lcd.setCursor(3,0);
   lcd.print("Ventilator");
   
-  Serial.begin(9600); //debugging
-  Serial.println(analogRead(flowPin));
   pinMode(dirPin, OUTPUT); //setting output/input
   pinMode(speedPin, OUTPUT);
   pinMode(modePin, INPUT);
@@ -48,7 +45,7 @@ void setup() {
 
 }
 
-void showData(){
+void showData(){ //shows what mode and the amount of air pushed per breathe
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("t=");
@@ -69,7 +66,7 @@ void showData(){
   
 }
 
-void pushIn(int amount){ //for pushing in, and then pulling out
+void pushIn(int amount){ //completes one cycle of pushing in and out
   inPush = true;
   
   
@@ -98,7 +95,7 @@ void loop() {
     showData();
     if(!inPush){
       if(digitalRead(manualPin)){
-        lcd.setCursor(2, 1);
+        lcd.setCursor(2, 1); //shows that it is going through a cycle
         lcd.print("COMPRESSING");
         pushIn(airTime);
       }
@@ -113,12 +110,12 @@ void loop() {
     lcd.print(delayBetweenBreaths);
     
     if(!inPush && loops > 2){
-      lcd.setCursor(2, 1);
+      lcd.setCursor(2, 1); //shows that it is going through a cycle
       lcd.print("COMPRESSING");
       pushIn(airTime);
 
       showData();      
-      lcd.setCursor(6, 0);
+      lcd.setCursor(6, 0); //showing frequency
       lcd.print("d=");
       lcd.setCursor(8, 0);
       lcd.print(delayBetweenBreaths);
@@ -133,34 +130,31 @@ void loop() {
     air = analogRead(flowPin);
     showData();
     delay(100);
-    Serial.println(calibrated);
     if (!calibrated){
       lcd.setCursor(2,1);
-      lcd.print("CALIBRATING");
+      lcd.print("CALIBRATING"); //calibrates pressure sensor, as the pressure sensor is slightly weird sometimes. 
       delay(25000);
       calibrated = true;
       lcd.clear();
     }
     lcd.setCursor(8, 0);
-    lcd.print(threshold);
+    lcd.print(threshold); //prints threshold
     lcd.setCursor(6, 1);
     lcd.print(air);
     
-    if(air > threshold){
+    if(air > threshold){ //if the pressure is below the threshold, meaning patient is breathing
       if(!inPush){
         lcd.setCursor(2, 1);
-        lcd.print("COMPRESSING");
+        lcd.print("COMPRESSING"); 
         pushIn(airTime);
       }
       delay(800);
     }
     
   }
-  if(digitalRead(modePin)){
-    Serial.println("done");
+  if(digitalRead(modePin)){ //immediatly shows mode when updated
     mode = mode + 1;
     mode = mode % 3;
-    Serial.println(mode);
     
     if(mode == 0){
       lcd.setCursor(13, 0);
