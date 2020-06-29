@@ -11,14 +11,28 @@ This ventilator has 3 modes, manual, timed, and dynamic. In manual mode, the ope
 
 # Hardware:
 Board: DFRobot Arduino Romeo
+
+
 Piston: Bi-directional electric motor-driven piston with a speed of 100mm/s and a max extention range of 250mm
+
+
 Diaphram: Emergency Medical Resustiation diapram
+
+
 Sensors: Directional Airflow sensor
+
+
 
 Other parts:
 Frame: Laser cut boards and aluminium struts
+
+
 Jumper wires
+
+
 External 12V power source
+
+
 
 # How to run code:
 To run the code, first download the Arduino IDE. Put the Liquid_Crystal folder inside the Arduino Libraries folder. Then, download the VentilatorCode folder, open it, and open it with Arduino IDE. Upload it to the arduino and you are done! You might need to adjust some stats such as the LCD I2C initalization address, or the threshold depending on what sensor you are using for the airflow. 
