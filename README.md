@@ -1,5 +1,3 @@
-Note that this branch is ongoing development. 
-
 # VENTILATOR
 This is the code for an open source, simple to make, and easy to use ventilator. 
 
@@ -25,7 +23,4 @@ To run the code, first download the Arduino IDE. Put the Liquid_Crystal folder i
 
 # Disclaimer:
 Note that this ventilator code or design has not been approved by health organizations. We are not responsible for any harm caused to any persons due to this ventilator, however we have tested this system to confidently say that this code and design is safe and should be usable. 
-
-# Project Plan (Link)
-https://shimo.im/docs/DgdxrdCHTx8DJGdR/
 
