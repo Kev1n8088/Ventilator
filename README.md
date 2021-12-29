@@ -24,3 +24,5 @@ To run the code, first download the Arduino IDE. Put the Liquid_Crystal folder i
 # Disclaimer:
 Note that this ventilator code or design has not been approved by health organizations. We are not responsible for any harm caused to any persons due to this ventilator, however we have tested this system to confidently say that this code and design is safe and should be usable. 
 
+
+![Demo Animation](../assets/image1.JPG?raw=true)
